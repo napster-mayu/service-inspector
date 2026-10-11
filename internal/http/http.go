@@ -1,4 +1,4 @@
-package route
+package http
 
 import (
 	"net/http"
@@ -6,9 +6,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/napster-mayu/service-inspector/internal/service"
 )
 
-func GetRoutes() *chi.Mux {
+func GetRoutes(svc service.BaseSevice) *chi.Mux {
 	r := chi.NewRouter()
 
 	// A good base middleware stack
@@ -23,7 +24,8 @@ func GetRoutes() *chi.Mux {
 	r.Use(middleware.Timeout(5 * time.Second))
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome"))
+		msg := svc.Welcome()
+		w.Write([]byte(msg))
 	})
 
 	return r
